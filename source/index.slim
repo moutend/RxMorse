@@ -1,0 +1,12 @@
+doctype html
+html
+  head
+   == partial '_layouts/head.slim'
+  body.h-100.absolute style="width: 100%; height: 100%;"
+    .h-10
+      .status Morse
+    .h-60.w-100
+      textarea.w-100.h-50.f-128.p-1em id='input'
+      textarea.w-100.h-50.f-128.p-1em id='output'
+    .h-30
+      button.h-100.w-100.f-320 id='beep' Beep

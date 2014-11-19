@@ -1,0 +1,557 @@
+script
+  |
+    white = function(){e=document.all;Array.prototype.forEach.call(e,function(e){if(e.tagName==="IFRAME"||e.tagName==="FRAME"){console.log(e.contentDocument)}cssText=e.style.cssText;cssText+="color: #000 !important;";cssText+="background-color: #FFF !important;";cssText+="background-image: none; color: #000 !important;";cssText+="border-color: #000 !important;";if(e.tagName==="IMG"){cssText+="-webkit-filter: invert(100%); filter: invert;"}e.style.cssText=cssText})}
+    black = function(){e=document.all;Array.prototype.forEach.call(e,function(e){if(e.tagName==="IFRAME"||e.tagName==="FRAME"){console.log(e.contentDocument)}cssText=e.style.cssText;cssText+="color: #FFF!important;";cssText+="background-color: #000!important;";cssText+="background-image: none; color: #FFF!important;";cssText+="border-color: #FFF!important;";if(e.tagName==="IMG"){cssText+="-webkit-filter: invert(100%); filter: invert;"}e.style.cssText=cssText})}
+
+.absolute.h-10.w-100 id='toolbar'
+  .container.relative.h-100.text-center
+    .h-100.w-30.float-l
+    .h-100.w-40.float-l.middle id='status'
+      h1.w-100.h-100
+        span.block __status.message__
+    .w-30.f-128.h-100.middle
+      .middle-c onclick='white()'
+        i.fa.fa-bell
+      .middle-c onclick='black()'
+        i.fa.fa-bell-o
+      .middle-c id='btn-settings'
+        i.fa.fa-cog
+      .middle-c id='btn-help'
+        i.fa.fa-info
+
+.absolute.h-10.w-100
+  .container.relative.h-100.text-center.green id='notification' style='display:none;'
+    .w-100.f-128.h-100.middle
+      span.middle-c 保存しました
+
+section.full.absolute id='settings' style='display: none;'
+  .container.text-center.p-2em
+    h1 設定
+    p 設定は即座に反映されます。
+    ul.block
+      li.p-d5em.b-b-d1px
+        .col-sm-3.col-md-3.p-t-1em.left 辞書のURL
+        textarea.col-sm-9.col-md-9.p-d5em.b-1px rows='1' __settings.dic__
+      li.p-d5em.b-b-d1px
+        .col-sm-8.col-md-8.p-t-1em.left 音声読み上げ
+        .btn.btn-default.col-sm-4.col-md-4
+          i.fa.fa-bell.f-128
+          span.f-128  する
+      li.p-d5em.b-b-d1px
+        .col-sm-8.col-md-8.p-d5em.left オートセーブの間隔 (単位は秒)
+        textarea.col-sm-4.col-md-4.p-d5em.b-1px rows='1' __settings.interval__
+      li.p-d5em.b-b-d1px
+        .col-sm-8.col-md-8.p-d5em.left テストの問題数
+        textarea.col-sm-4.col-md-4.p-d5em.b-2px rows='1' __settings.questions__
+      li.p-d5em.b-b-d1px
+        .col-sm-8.col-md-8.p-d5em.left 効果音のボリューム (0が無音、1が最大)
+        textarea.col-sm-4.col-md-4.p-d5em.b-2px rows='1' __settings.volume__
+      li.p-d5em.b-b-d1px
+        .col-sm-8.col-md-8.p-d5em.left すべての設定をデフォルトの状態にリセット
+        btn.btn-default.col-sm-4.col-md-4.p-d5em.b-2px id='settings-reset' リセット
+
+section.full.absolute id="ready"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .inline-block.b-2px.m-t-1em
+        .block.p-1em
+          p.f-160 __summary.message__
+          p.p-1em __summary.status__
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100 id='dropbox'
+          button.btn.btn-default.h-100.f-144 DropBox
+        .btn-group.h-100 id='offline'
+          button.btn.btn-primary.h-100.f-144 オフライン
+
+section.full.absolute id="home" style='display:none;'
+  .container.relative.h-100.text-center
+    .h-10
+    .h-70
+      .inline-block.p-1em.b-2px.relative.top-25
+        .inline-block.b-b-2px
+          .block.p-1em
+            span.f-192 学習時間: __summary.period__
+          .block
+            .inline-block.p-lr-1em
+              span.f-192 札: __summary.cards__
+            .inline-block.p-lr-1em
+              span.f-192 学習済み: __summary.learned__
+          .block.p-1em
+            span.p-lr-1em ストレージ: __summary.strage__
+            span.p-lr-1em タグ: __summary.tagname__
+        h2.m-tb-1em.center メニューを選択してください。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-default.btn-h.h-100.f-144 作成
+        .btn-group.h-100
+          button.btn.btn-default.btn-j.h-100.f-144 設定
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100.f-144 テスト
+
+section.full.absolute id="chose-tag" style='display:none;'
+  .container.relative.h-100.text-center
+    .h-20
+    .h-60
+      .w-100
+        textarea.f-128.w-40.b-2px.p-1em rows='1' id='chose-tag-input' v-model='tag.name' __tag.name__
+      .inline-block.b-2px.p-1em.m-tb-1em
+        p 現在のタグ名を入力されたタグ名へ変更します。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-default.btn-h.h-100.f-144 戻る
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100.f-144 タグを変更
+
+section.full.absolute id="chose-tag-saving" style='display:none;'
+  .container.relative.h-100.text-center
+    .h-20
+    .h-60
+      .h-100
+        .inline-block.b-2px
+          p.p-1em しばらくお待ちください。
+          .block.f-192
+            span.block.p-d5em __tag.from__
+            i.block.fa.fa-arrow-down
+            span.block.p-d5em __tag.to__
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-h.h-100 戻る
+
+
+section.full.absolute id="apply-tag" style='display:none;'
+  .container.relative.h-100.text-center
+    .h-20
+    .h-60
+      .inline-block.b-2px
+        p.f-144.p-1em タグを変更しました
+        .block.p-1em
+          p タグを__tag.name__に変更しました。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100 次へ
+
+section.full.absolute id="loading" style="display:none;"
+  .container.text-center.p-2em
+    h1 読込み中
+
+section.full.absolute id="saving" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .h-100
+        .inline-block.b-2px.p-2em
+          p.p-0.f-128 しばらくお待ちください
+    .h-20
+
+section.full.absolute id="done" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .h-100
+        .inline-block.b-2px.p-2em
+          p.p-d5em.f-160 __cards.num__枚の札を__cards.strage__に保存しました。
+          p.f-128 続けるには「次へ」を選択してください。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100.f-144 次へ
+
+section.full.absolute id="error" style="display:none;"
+  .container.text-center.p-2em
+    h1 エラー
+    p __message__
+
+section.full.absolute id="edit-tags" style="display:none;"
+  .container.text-center.p-2em
+    h1 札束を編集
+    .inline-block.b-2px.f-128.m-t-1em style="position: relative; max-height: 15em;"
+      .block.p-d5em.m-d25em.b-2px
+        .inline-block.p-lr-1em
+          span.f-192 default
+        .inline-block.p-lr-1em
+          .inline-block.p-lr-1em
+            span = "札: "
+            span.f-160 123
+          .inline-block.p-lr-1em
+            span = "学習時間: "
+            span.f-160 1分23秒
+          .inline-block.p-lr-1em
+            .btn-group
+              button.btn.btn-default.p-d5em.m-d25em.btn-h.f-128 削除
+    .block.p-d5em.m-d25em.b-2px style="display: none;"
+      .inline-block.p-lr-1em
+        span.f-192 __tag_name__
+      .inline-block.p-lr-1em
+        .inline-block.p-lr-1em
+          span = "札: "
+          span.f-160 __cards__
+        .inline-block.p-lr-1em
+          span = "学習時間: "
+          span.f-160 __period__
+        .inline-block.p-lr-1em
+          .btn-group
+            button.btn.btn-default.p-d5em.m-d25em.btn-h.f-128 削除
+    .btn-group.btn-group-justified
+      .btn-group
+        button.m-t-1em.btn.btn-default.yon.btn-h 戻る
+      .btn-group
+        button.m-t-1em.btn.btn-primary.yon.btn-l 次へ
+
+section.full.absolute id="add-tags" style="display:none;"
+  .container.text-center.p-2em
+    h1 札束を編集
+    .inline-block.b-2px.f-128.m-t-1em style="position: relative; max-height: 15em;"
+      .block.p-d5em.m-d25em.b-2px
+        .inline-block.p-lr-1em
+          span.f-192 default
+    .block.m-t-1em
+      .inline-block.p-lr-1em.w-80
+        input.form-control.f-160.p-1em.m-tb-1em type='text'
+      .inline-block.p-lr-1em
+        .btn-group
+          button.btn.btn-default.p-d5em.m-tb-1em.btn-h.f-128 追加
+
+
+
+section.full.absolute id="cards-export" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .inline-block.b-2px
+        a.block.p-1em.h-100 href="__cards.href__" download='__cards.download__' id="cards-backup-export-link"
+          .p-t-1em
+            i.f-512.fa.fa-download
+          .inlin-block.f-192 __cards.filename__
+          .p-1em style='color: #000;'
+            p.f-144.bold ダウンロードが始まります
+            p.p-d5em ダウンロードが始まらない場合、アイコンをクリックしてください。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-h.h-100 戻る
+
+
+section.full.absolute id="cards-import" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+      input type='file' id='cards-import-upload' style='display: none;'
+    .h-60
+      .block.m-b-1em id='cards-import-drop'
+        .inline-block.p-4px.drop
+          .inline-block.p-2em.b-2px
+            i.f-512.fa.fa-upload
+            .inlin-block.f-192 id='cards-backup-filename'
+            p.p-d5em.f-144.bold ファイルをドロップ
+            p または、アイコンをクリックするとファイルが選択されます。
+            p まだファイルが選択されていません。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-h.h-100 戻る
+
+section.full.absolute id="cards-import-error" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .h-100
+        .inline-block.b-2px.p-1em.m-t-1em
+          p.p-1em.f-128 札ファイルの読み込みに失敗しました。
+          p.p-d5em.bold エラーの理由
+          p.f-128.bold __cards.message__
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-h.h-100 戻る
+
+section.full.absolute id="cards-import-finished" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .h-100
+        .inline-block.b-2px
+          p.p-1em.f-128 札ファイルを読込みました。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100 戻る
+
+section.full.absolute id="test-learned" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .h-100
+        .inline-block.b-2px.p-1em
+          p.f-192.p-d5em 今日の学習は完了しました
+          p.p-d5em.f-128 すべての札は学習済みです。
+          p しばらく時間を空けてから、再びテストしてください。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-h.h-100 戻る
+
+section.full.absolute id="test-question" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-20
+    .h-60
+      .h-100
+        .h-50.w-100.btn-k
+          .h-100.w-20.float-l.middle
+            .middle-c
+              .inline-block.b-2px.w-80.p-d5em style='__cardA.style__'
+                span.block.f-128
+                  span オモテ
+          .w-80.h-100.p-b-2p
+            textarea.h-96.form-control.w-100 v-model='card.front' rows='3'  id='test-question-front' __card.front__
+        p.relative style='color: #DDD;'__card.front_chars__
+        p.inline-block.p-1em.b-2px ウラを思い出したら、次へ。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-default.btn-h.h-100 失念
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100 次へ
+
+section.full.absolute id="test-answer" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-20
+    .h-60
+      .h-100
+        .h-50.w-100.btn-k
+          .h-100.w-20.float-l.middle
+            .middle-c
+              .inline-block.b-2px.w-80.p-d5em style='__cardA.style__'
+                span.block.f-128
+                  span ウラ
+                  span.m-lr-d25em.f-144 A
+          .w-80.h-100.p-b-2p
+            textarea.h-96.form-control.w-100 readonly='true' rows='3' v-model='cardA.back' id='test-answer-back-A' __cardA.back__
+        .h-50.w-100.btn-j
+          .h-100.w-20.float-l.middle
+            .middle-c
+              .inline-block.b-2px.w-80.p-d5em style='__cardB.style__'
+                span.block.f-128
+                  span ウラ
+                  span.m-lr-d25em.f-144 B
+          .w-80.h-100.p-b-2p
+            textarea.h-96.form-control.w-100 readonly='true' rows='3' v-model='cardB.back' id='test-answer-back-B' __cardB.back__
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75 id='test-answer-next'
+        .btn-group.h-100
+          button.btn.btn-default.btn-l.h-100 次へ
+      .btn-group.btn-group-justified.top-25.h-75 id='test-answer-ab'
+        .btn-group.h-100
+          button.btn.btn-default.btn-k.h-100 A
+        .btn-group
+          button.btn.btn-default.btn-j.h-100 B
+
+section.full.absolute id="test-result" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-20
+    .h-60
+      .h-100
+        .inline-block.b-2px.p-1em
+          ul
+            li.block.p-d5em
+              span.f-128 = "学習時間: "
+              span.f-192 id="test-finished-passed" __result.period__
+            li.inline-block.p-d5em
+              span.f-128 = "正解: "
+              span.f-192 id="test-finished-right" __result.right__
+            li.inline-block.p-d5em
+              span.f-128 = "不正解: "
+              span.f-192 id="test-finished-wrong" __result.wrong__
+            li.inline-block.p-d5em
+              span.f-128 = "失念: "
+              span.f-192 id="test-finished-forgot" __result.forgot__
+          p.p-1em この結果を保存するには、「保存」をクリックして下さい。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75 id='test-answer-next'
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100 保存
+
+section.full.absolute id="chose-edit-type" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60.w-100.p-lr-4p
+      ul.w-100.p-1em.b-2px.left
+        li.block.p-d5em id='btn-byhand'
+          span id="chose-edit-type-c1" style="display: none;"
+            i.p-lr-d5em.f-192.fa.fa-arrow-right
+          span.f-192.left 1枚ずつ札を作成
+        li.block.p-d5em id='btn-bywords'
+          span id="chose-edit-type-c2" style="display: none;"
+            i.p-lr-d5em.f-192.fa.fa-arrow-right
+          span.f-192.left 文章から札を作成
+        li.block.p-d5em id='btn-export'
+          span id="chose-edit-type-c3" style="display: none;"
+            i.p-lr-d5em.f-192.fa.fa-arrow-right
+          span.f-192.left エクスポート
+        li.block.p-d5em id='btn-import'
+          span id="chose-edit-type-c4" style="display: none;"
+            i.p-lr-d5em.f-192.fa.fa-arrow-right
+          span.f-192.left インポート
+    .h-20
+      .btnroup.btn-group-justified.relative.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-default.btn-h.h-100 戻る
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100 次へ
+
+section.full.absolute id="add-cards-manually" style="display:none;"
+  .container.relative.h-100.text-center id='RegisterCardsByHand'
+    .h-10
+    .h-10
+      .h-100.w-30.float-l
+      .h-100.w-40.float-l
+        span.block.p-t-1em id='add-cards-manually-status' __status.num__ / __status.len__
+      .h-100.w-30
+        .h-100
+          button.btn.btn-default.btn-dd この札を削除
+    .h-60
+      .h-50.w-100
+        .h-100.w-20.float-l.middle
+          .middle-c
+            .inline-block.b-2px.w-80.p-d5em
+              span.block.f-128
+                span オモテ
+        .h-100.w-80.p-b-2p
+          textarea.h-96.form-control.w-100 rows='3' v-model='card.front' id='add-cards-manually-front' __card.front__
+      .h-50.w-100
+        .h-100.w-20.float-l.middle
+          .middle-c
+            .inline-block.b-2px.w-80.p-d5em
+              span.block.f-128
+                span ウラ
+        .h-100.w-80.p-b-2p
+          textarea.h-96.form-control.w-100 rows='3' v-model='card.back' id='add-cards-manually-back' __card.back__
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-default.btn-h.h-100.f-144.m-0.p-0 id='add-cards-manually-prev' 前の札
+        .btn-group.h-100
+          button.btn.btn-primary.btn-w.h-100.f-144.m-0.p-0 保存
+        .btn-group.h-100
+          button.btn.btn-default.btn-l.h-100.f-144.m-0.p-0 次の札
+
+section.full.absolute id="add-card-from-text" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60.w-100
+      .h-75.w-100
+        .h-100.w-100.p-lr-4p
+          textarea.inline-block.form-control.f-128 rows='5' id='register-cards-by-words-input'
+      .h-25
+        p.inline-block.b-2px.p-d5em.m-t-1em 文章から単語を抽出し、札を作成します。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-default.btn-h.h-100 戻る
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.h-100 作成
+
+section.full.absolute id="test-notfound" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .inline-block.b-2px.p-1em
+        p.f-144 テストをするには、1枚以上の札が必要です。
+        p 「札の作成と編集」から、札を作成してください。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-h.h-100 戻る
+
+section.full.absolute id="register-cards-by-words-notfound" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-20
+    .h-60
+      .h-100
+        .inline-block.p-1em.b-2px
+          p.f-160 札を作成できません
+          p.p-d5em 単語を抽出できないか、抽出した単語は既に登録済みです。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-h.h-100 戻る
+
+
+section.full.absolute id="register-cards-by-words-create" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+      .w-30.h-100.float-l.left
+        a.b-2px.inline-block.p-d5em href='__card.link__' target='blank'  辞書を開く
+      .w-40.h-100.float-l
+        span.block.p-t-1em id='add-cards-manually-status' __status.num__ / __status.len__
+      .w-30.h-100
+        button.p-d5em.block.btn.btn-default.btn-dd この札を削除
+    .h-60
+      .h-50.w-100
+        .h-100.w-20.float-l
+          .inline-block.p-d5em.b-2px
+            span.block 札
+            span.block.f-128
+              span オモテ
+        .h-100.w-80.p-b-2p
+          textarea.h-96.form-control.w-100 rows='3' v-model='card.front'__card.front__
+      .h-50.w-100
+        .h-100.w-20.float-l
+          .inline-block.p-d5em.b-2px
+            span.block 札
+            span.block.f-128
+              span ウラ
+        .h-100.w-80.p-b-2p
+          textarea.h-96.form-control.w-100 rows='3' v-model='card.back' id='register-cards-by-words-back' __card.back__
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-default.btn-h.h-100.f-144.m-0.p-0 id='add-cards-manually-prev' 前の札
+        .btn-group.h-100
+          button.btn.btn-primary.btn-w.h-100.f-144.m-0.p-0 保存
+        .btn-group.h-100
+          button.btn.btn-default.btn-l.h-100.f-144.m-0.p-0 次の札
+
+section.full.absolute id="registered" style="display:none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .h-100
+      p.p-0 札を__card.num__枚、作成しました。
+    p.f-128 完了するには「保存」をクリックして下さい。
+    .btn-group.btn-group-justified
+      .btn-group
+        button.btn.btn-default.yon.btn-h  前の札
+      .btn-group
+        button.btn.btn-primary.yon.btn-l 保存
+
+section.full.absolute id="saved" style="display: none;"
+  .container.relative.h-100.text-center
+    .h-10
+    .h-10
+    .h-60
+      .h-100
+        p.p-0 __card.num__枚の札を保存しました。
+        p.p-0 続けるには「次へ」を選択してください。
+    .h-20
+      .btn-group.btn-group-justified.top-25.h-75
+        .btn-group.h-100
+          button.btn.btn-primary.btn-l.l-100.f-144 次へ
+

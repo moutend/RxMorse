@@ -1,0 +1,21 @@
+- settings = data.settings.global
+span id="audios"
+.block.relative
+  section.absolute id="start"
+    .block.col-md-12.col-sm-12.p-0.m-0
+      p.p-t-1em.serif.font-no.text-center
+        = "何か入力して下さい。"
+      textarea.bo-2p.block.font-bg.form-control.max-width.p-t-1em rows='3' id='input'
+    .block.col-md-12.col-sm-12.p-0
+      p.serif.font-no.text-center.p-t-1em
+        = "または、単語を抽出するWebページのURLを入力して下さい。"
+      input.bo-2p.font-bg.form-control type="text" placeholder="http://"
+    button.max-width.btn.btn-primary.p-1em.m-tb-1em id='btn' Extract
+    .block.col-md-12.col-sm-12.p-0.m-0
+  section.absolute style="display:none; width: 100%; height: 100%;" id="question"
+    h3 Do you know?
+    h2 id="word-number"
+    h1
+      a target="blank" id="word"
+    button.btn.btn-primary.p-0.m-0 style="font-size: 320%; width: 50%; height: 4em;"id='btn' Yes
+    button.btn.btn-primary.p-0.m-0 style="font-size: 320%; width: 50%; height: 4em;"id='btn' No

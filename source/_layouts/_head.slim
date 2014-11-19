@@ -1,0 +1,12 @@
+- settings = data.settings.global
+meta charset="utf-8"
+meta property="og:title" content=""
+meta property="og:type" content="article"
+meta property="og:url" content=""
+meta property="og:image" content=""
+meta property="og:description" content=""
+meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+link rel="icon" type="image/vnd.microsoft.icon" href="#{settings[:url_prefix]}/favicon.ico"
+== stylesheet_link_tag 'styles'
+== javascript_include_tag 'vue.js', 'morse', 'main', 'screen', 'audio', 'key', 'cards', 'strage'
+title = "#{data.settings.global.title}"
