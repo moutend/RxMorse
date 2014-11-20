@@ -84,9 +84,8 @@ window.onload = () ->
       , milli_sec
 
   play = () ->
-    o = $('#output')[0]
     q = []
-    for code in o.value.split ' '
+    for code in $('#output')[0].value.split ' '
       for char in code.split ''
         if char is '.'
           q.push beep(window.app.settings.short_beep)
