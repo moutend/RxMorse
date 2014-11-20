@@ -11,7 +11,7 @@ set :layouts_dir, '_layouts'
 
 configure :build do
   before_build do
-    prefix = "/huda"
+    prefix = ""
     data.settings.global["url_prefix"] = prefix
     set :css_dir,    "#{prefix}/sass"
     set :fonts_dir,  "#{prefix}/fonts"
