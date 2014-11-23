@@ -26,18 +26,22 @@ class Audio
       alert "Audio Error: #{e}"
 
   freq: (val) =>
+    return @obj.freq if val is undefined
     @obj.freq = parseInt val
 
   gain: (val) =>
+    return @obj.gain if val is undefined
     @obj.gain = parseFloat val
 
   bpm: (val) =>
+    return @obj.bpm if val is undefined
     co = 1 / (parseInt(val) / 60) * 1000
     @obj.short_mute = 1 / 4 * co
     @obj.short_beep = 1 / 4 * co
     @obj.long_mute  = 3 / 4 * co
     @obj.long_beep  = 3 / 4 * co
     @obj.blank      = 2 / 3 * co
+    val
 
   s_beep: () =>
     return (resolve) =>

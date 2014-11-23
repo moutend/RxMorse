@@ -40,12 +40,12 @@ window.onload = () ->
     _$('#home')[0].style.display = 'block'
 
   reset_params = () ->
-    _$('#input_gain')[0].value = window.app.se.obj.gain = 0.5
-    _$('#input_freq')[0].value = window.app.se.obj.freq = 880
-    _$('#input_bpm')[0].value  = window.app.se.obj.bpm  = 192
+    _$('#input_gain')[0].value = window.app.se.obj.gain 0.5
+    _$('#input_freq')[0].value = window.app.se.obj.freq 880
+    _$('#input_bpm')[0].value  = window.app.se.obj.bpm  192
     window.app.se.bpm()
-    _$('#input_dot')[0].value  = window.app.key.dot  = '.'
-    _$('#input_dash')[0].value = window.app.key.dash = '_'
+    _$('#input_dot')[0].value  = window.app.key.dot '.'
+    _$('#input_dash')[0].value = window.app.key.dash '_'
 
   window.app =
     blur: true
