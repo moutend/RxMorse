@@ -4,26 +4,78 @@
 @import "bootstrap-custom";
 .btn {
   padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+.btn-default {
   border: solid 1px #AAA;
 }
-.btn-group-justified {
-  border-top: solid 1px #333;
+.right {
+  text-align: right;
+}
+ul {
+  border-radius: 8px;
+  border: solid 4px #AAA;
+  background-color: #FFF;
+}
+.screen {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  color: #000;
+  background-color: #DDD;
+}
+.debug {
+  color: #FFF;
+  border: solid 2px #AAA;
+  background-color: #AAA;
+}
+.status {
+  background-color: #FFF;
+  border-bottom: solid 2px #AAA;
+}
+.bold {
+  font-weight: bold;
+}
+.shadow {
+  color: #000;
+  text-shadow: 0 0 4px #AAA;
+}
+input {
+  color: #000;
+  background-color: transparent;
+}
+textarea.form-control {
+  color: #000;
+  background-color: #FFF;
+  border: solid 4px #AAA;
+  border-radius: 8px;
+  height: 100%;
+  min-height: 100%;
+  letter-spacing: .125em; 
+  font-size: 160%;
+  padding: .5em;
 }
 .middle {
   display: table;
 }
 .middle-c {
+  font-weight: bold;
+  font-size: 128%;
   display: table-cell;
   vertical-align: middle;
 }
 body {
-  background-color: #DDD;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
-.container {
+.container-fluid{
+  position: absolute;
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: #DDD;
   color: #000;
   z-index: 90;
 }
@@ -55,22 +107,21 @@ textarea {
 .f-128 {font-size: 128%;}
 .f-100 {font-size: 100%;}
 .p-1em {padding: 1em;}
+.p-l-2em {padding-left: 2em;}
+.p-l-1em {padding-left: 1em;}
+.p-lr-1em {padding-right: 1em; padding-left: 1em;}
+.m-l-1em {margin-left: 1em;}
+.p-d5em {padding: .5em;}
+.p-2p {padding: 2%;}
+.p-tb-2p {padding-bottom: 2%; padding-top: 2%;}
+.p-tb-1p {padding-bottom: 1%; padding-top: 1%;}
+.p-r-1em {padding-right: 1em;}
 .h-10 {height: 10%;}
 .h-20 {height: 20%;}
 .h-30 {height: 30%;}
 .h-50 {height: 50%;}
-.h-60 {height: 60%;}
 .h-70 {height: 70%;}
-.h-75 {height: 75%;}
-.h-80 {height: 80%;}
-.h-92 {height: 100%;}
+.h-90 {height: 90%;}
 .h-100 {height: 100%;}
 .w-100 {width: 100%;}
-.w-80  {width: 80%;}
-.w-50  {width: 50%;}
-.w-42  {width: 42%;}
-.w-40  {width: 40%;}
-.w-30  {width: 30%;}
-.w-32  {width: 32%;}
-.w-20  {width: 20%;}
-.w-16  {width: 16%;}
+.w-50 {width: 50%;}

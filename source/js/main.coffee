@@ -1,145 +1,78 @@
-$ = (elem) ->
-  document.querySelectorAll elem
-
 window.onload = () ->
-  window.app =
-    se: new Audio
-    morse: new Morse
-    settings:
-      short_mute: 128
-      short_beep: 128
-      long_mute:  384
-      long_beep:  256
-      blank:      256
-
-  _code  = ''
-  _timer = null
-  _input = null
-  _push  = null
-  _blur  = true
-
-  keydown = (event) ->
-    if _blur? and (event.keyCode is 32 or event.keyCode is 0)
-      if _push is null
-        window.app.se.playOsc()
-        _push = setTimeout () ->
-          window.app.se.stopOsc()
-        , 1000
-        _input = +new Date()
-      if _timer isnt null
-        clearTimeout _timer
-        _timer = null
-    null
-
-  keyup = (event) ->
-    if _blur? and (event.keyCode is 32 or event.keyCode is 0)
-      window.app.se.stopOsc()
-      if +new Date() - _input <  window.app.settings.short_beep
-        _code += '.'
-      else
-        _code += '_'
-      clearTimeout _push
-      _push = null
-      if _timer is null
-        _timer = setTimeout () ->
-          o = $('#output')[0]
-          o.value += " #{_code}"
-          encode()
-          _timer = null
-          _code = ''
-        , window.app.settings.blank
-    null
-
-  decode = () ->
-    i = $('#input')[0]
-    o = $('#output')[0]
-    o.value = window.app.morse
-      .encode(i.value)
-      .toString().replace /,/g, ' '
+  _$ = (el) ->
+    document.querySelectorAll el
 
   encode = () ->
-    i = $('#input')[0]
-    o = $('#output')[0]
+    i = _$('#input_str')[0]
+    o = _$('#input_code')[0]
+    o.value = window.app.morse
+      .encode(i.value.toLowerCase())
+      .toString().replace /,/g, ' '
+    o.value += ' '
+
+  decode = () ->
+    i = _$('#input_str')[0]
+    o = _$('#input_code')[0]
     i.value = window.app.morse
       .decode o.value.split(' ')
 
-  beep = (milli_sec) ->
-    return (resolve) ->
-      window.app.se.playOsc()
-      setTimeout () ->
-        window.app.se.stopOsc()
-        resolve()
-      , milli_sec
+  clear = () ->
+    _$('#input_str')[0].value  = ''
+    _$('#input_code')[0].value = ''
 
-  exec = (q) ->
-    fire = () ->
-      if q.length > 0
-        eval(q.shift())(fire)
-    fire()
+  open_settings = () ->
+    _$('#settings')[0].style.display = 'block'
+    _$('#home')[0].style.display = 'none'
 
-  sleep = (milli_sec) ->
-    return (resolve) ->
-      setTimeout () ->
-        resolve()
-      , milli_sec
+  close_settings = () ->
+    _$('#settings')[0].style.display = 'none'
+    _$('#home')[0].style.display = 'block'
 
-  play = () ->
-    q = []
-    for code in $('#output')[0].value.split ' '
-      for char in code.split ''
-        if char is '.'
-          q.push beep(window.app.settings.short_beep)
-        if char is '_'
-          q.push beep(window.app.settings.long_beep)
-        q.push sleep(window.app.settings.short_mute)
-      q.push sleep(window.app.settings.long_mute)
-    exec q
+  reset_params = () ->
+    _$('#input_gain')[0].value = 0.5
+    _$('#input_freq')[0].value = 880
+    _$('#input_bpm')[0].value  = 192
+    _$('#input_dot')[0].value  = 192
+    _$('#input_dash')[0].value = 192
 
-  focus = () ->
-    _blur = null
+  window.app =
+    morse: new Morse
+    se: new Audio obj =
+      freq: 880
+      gain: 0.5
+      bpm:  180
+    key: new Key obj =
+      beep_key: ['body']
+      beep_btn: ['#btn_beep']
+      code:     '#input_code'
+      str:      '#input_str'
+      hook:     decode
 
-  blur = () ->
-    _blur = true
+  inputs =
+    '#input_gain':  window.app.se.gain
+    '#input_freq':  window.app.se.freq
+    '#input_bpm':   window.app.se.bpm
+    '#input_str':   encode
+    '#input_code':  decode
 
-  btn_beep = $('#btn_beep')[0]
-  if window.ontouchstart is null
-    btn_beep.removeEventListener 'touchstart', keydown
-    btn_beep.addEventListener    'touchstart', keydown
-    btn_beep.removeEventListener 'touchend', keyup
-    btn_beep.addEventListener    'touchend', keyup
-  else
-    btn_beep.removeEventListener 'mousedown', keydown
-    btn_beep.addEventListener    'mousedown', keydown
-    btn_beep.removeEventListener 'mouseup', keyup
-    btn_beep.addEventListener    'mouseup', keyup
+  for key, value of inputs
+    el = _$(key)[0]
+    el.removeEventListener 'input', value
+    el.addEventListener    'input', value
 
-  btn_play = $('#btn_play')[0]
-  if window.ontouchstart is null
-    btn_play.removeEventListener 'touchstart', play
-    btn_play.addEventListener    'touchstart', play
-  else
-    btn_play.removeEventListener 'mousedown', play
-    btn_play.addEventListener    'mousedown', play
+  btns =
+    '#btn_cog':   open_settings
+    '#btn_play':  window.app.se.play
+    '#btn_close': close_settings
+    '#btn_clear': clear
+    '#btn_reset': reset_params
 
-  body = $('body')[0]
-  body.removeEventListener 'keydown', keydown
-  body.addEventListener    'keydown', keydown
-  body.removeEventListener 'keyup',   keyup
-  body.addEventListener    'keyup',   keyup
-
-  input = $('#input')[0]
-  input.removeEventListener 'input', decode
-  input.addEventListener    'input', decode
-  input.removeEventListener 'focus', focus
-  input.addEventListener    'focus', focus
-  input.removeEventListener 'blur',   blur
-  input.addEventListener    'blur',   blur
-
-  output = $('#output')[0]
-  output.removeEventListener 'input', encode
-  output.addEventListener    'input', encode
-  output.removeEventListener 'focus', focus
-  output.addEventListener    'focus', focus
-  output.removeEventListener 'blur',  blur
-  output.addEventListener    'blur',  blur
+  for key, value of btns
+    el = _$(key)[0]
+    if window.ontouchstart is null
+      el.removeEventListener 'touchstart', value
+      el.addEventListener    'touchstart', value
+    else
+      el.removeEventListener 'mousedown', value
+      el.addEventListener 'mousedown', value
 

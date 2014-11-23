@@ -1,13 +1,59 @@
+- settings = data.settings.global
 doctype html
 html
   head
    == partial '_layouts/head.slim'
-  body.h-100.absolute style="width: 100%; height: 100%;"
-    .h-10
-      .status Morse
-    .h-60.w-100
-      textarea.w-100.h-50.f-192.p-1em id='input'
-      textarea.w-100.h-50.f-192.p-1em id='output'
-    .h-30
-      button.code.h-100.w-50.f-160 id='btn_play' Play
-      button.code.h-100.w-50.f-160 id='btn_beep' Beep
+  body.container-fluid
+    section.screen
+      .h-10.w-100.status.middle
+        .middle-c.w-50
+          span.p-l-1em = "#{data.settings.global.title}"
+        .middle-c.w-50.right
+          a href="#home" id="btn_close"
+            i.fa.fa-times.p-r-1em &nbsp; Close Settings
+      .h-90.w-100 id='settings'
+        .h-100.p-2p.f-144
+          ul.p-2p
+            li
+              span.p-l-1em Gain:
+              input.m-l-1em.middle-c style="width: 3.5em;" id='input_gain' value="0.5"
+            li
+              span.p-l-1em Frequency:
+              input.m-l-1em.middle-c style="width: 3.5em;" id='input_freq' value="880"
+              span Hz
+            li
+              span.p-l-1em BPM:
+              input.m-l-1em.middle-c style="width: 3.5em;" id='input_bpm' value="192"
+            li
+              span.p-l-1em Dot-char:
+              input.m-l-1em.middle-c style="width: 3.5em;" id='input_dot' value="."
+              span.p-l-1em Dash-char:
+              input.m-l-1em.middle-c style="width: 3.5em;" id='input_dash' value="_"
+            button.p-1em.btn.btn-primary id="btn_apply" Apply
+            button.p-1em.btn.btn-default id="btn_reset" Reset
+
+    section.screen id='home'
+      header.h-10.w-100.middle.status
+        .middle-c.w-50
+          span.p-l-1em = "#{data.settings.global.title}"
+        .middle-c.w-50.right
+          a.p-lr-1em href="#settings" id="btn_cog"
+            i.fa.fa-cog.p-r-1em &nbsp; Settings
+          a.p-lr-1em href="#help" id="help"
+            i.fa.fa-question.p-r-1em &nbsp; Help
+      .h-70.w-100.p-2p
+        .h-50.w-100.p-tb-1p
+          textarea.form-control id='input_str' placeholder="qrr"
+        .h-50.w-100.p-tb-2p
+          textarea.form-control id='input_code' placeholder="__._ ._. ._."
+      .h-20
+        .h-100.w-100.btn-group-justified role="group" aria-label="..."
+          .btn-group
+            button.btn.btn-default.code.h-100 id='btn_clear'
+              i.fa.fa-eraser.f-144 &nbsp; Clear
+          .btn-group
+            button.btn.btn-default.code.h-100 id='btn_play'
+              i.fa.fa-play.f-144 &nbsp; Play
+          .btn-group
+            button.btn.btn-primary.code.h-100 id='btn_beep'
+              i.fa.fa-send.f-144 &nbsp; Beep
