@@ -1,11 +1,11 @@
 class Audio
   _audioContext = null
   _osc          = null
-  _q            = []
-  @obj          = null
-
+  _q            = null
   _$ = (el) ->
     document.querySelectorAll el
+
+  obj: null
 
   playOsc: () ->
     try
@@ -25,27 +25,36 @@ class Audio
     catch e
       alert "Audio Error: #{e}"
 
-  freq: () =>
-    @obj.freq = parseInt _$('#input_freq')[0].value
+  freq: (val) =>
+    @obj.freq = parseInt val
 
-  gain: () =>
-    @obj.gain = parseFloat _$('#input_gain')[0].value
+  gain: (val) =>
+    @obj.gain = parseFloat val
 
-  bpm: () =>
-    c = 1 / (parseInt(_$('#input_bpm')[0].value) / 60) * 1000
-    @obj.short_mute = 1 / 4 * c
-    @obj.short_beep = 1 / 4 * c
-    @obj.long_mute  = 3 / 4 * c
-    @obj.long_beep  = 3 / 4 * c
-    @obj.blank      = 2 / 3 * c
+  bpm: (val) =>
+    co = 1 / (parseInt(val) / 60) * 1000
+    @obj.short_mute = 1 / 4 * co
+    @obj.short_beep = 1 / 4 * co
+    @obj.long_mute  = 3 / 4 * co
+    @obj.long_beep  = 3 / 4 * co
+    @obj.blank      = 2 / 3 * co
 
-  beep: (milli_sec) =>
+  s_beep: () =>
     return (resolve) =>
       @playOsc()
       setTimeout () =>
         @stopOsc()
         resolve()
-      , milli_sec
+      , @obj.short_beep
+
+  l_beep: () =>
+    return (resolve) =>
+      @playOsc()
+      setTimeout () =>
+        @stopOsc()
+        resolve()
+      , @obj.long_beep
+
 
   sleep = (milli_sec) ->
     return (resolve) ->
@@ -57,23 +66,26 @@ class Audio
     fire = () ->
       if q.length > 0
         eval(q.shift())(fire)
+      else
+        _q = null
     fire()
 
   play: () =>
-    return if _q.length isnt 0
-    for code in _$('#input_code')[0].value.split ' '
+    return null if _q?
+    _q = []
+    for code in window.app.codes
       for char in code.split ''
         if char is '.'
-          _q.push @beep(@obj.short_beep)
+          _q.push @s_beep()
         if char is '_'
-          _q.push @beep(@obj.long_beep)
+          _q.push @l_beep()
         _q.push sleep(@obj.short_mute)
       _q.push sleep(@obj.long_mute)
     exec _q
 
   constructor: (obj) ->
     @obj = obj
-    @bpm()
+    @bpm(@obj.bpm)
 
     if AudioContext?
       _audioContext = new AudioContext
