@@ -1,0 +1,19 @@
+timezone: Tokyo
+encoding: UTF-8
+
+title: "RxMorse - Morse code simulator app"
+description: "Morse code playground"
+
+url: "https://moutend.github.io/RxMorse"
+
+markdown: kramdown
+permalink: pretty
+
+sass:
+  sass_dir:  _scss
+  style:    :compressed
+
+exclude:
+  - "README.md"
+  - "Gemfile"
+  - "vendor"

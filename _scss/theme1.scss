@@ -1,0 +1,127 @@
+button {
+  div {
+    background-color: #579;
+    color: #FFF;
+    border-radius: 1em;
+    border: solid 3px #AAA;
+  }
+  div:active {
+    background-color: #89E;
+  }
+}
+#pro {
+  div {
+    background-color: #CCC;
+  }
+}
+
+#char {
+  font-weight: 200;
+  font-size: 320%;
+}
+
+#code {
+  font-weight: bold;
+  font-size: 192%;
+}
+
+.flex {
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.flex-body {
+  -webkit-order: 2;
+  order: 2;
+  display: block;
+  position: relative;
+  width: 94%;
+  height: 100%;
+  border-left: solid 2px #AAA;
+
+  .input-area {
+    border: none;
+    height: 50%;
+
+    textarea {
+      display: block;
+      height: 100%;
+      width: 90%;
+      font-family: "Source Code Pro", "Liberation Mono", Consolas, Courier, monospace, sans-serif;
+      letter-spacing: .125em;
+      line-height: 100%;
+      border: none;
+      margin: 0 auto;
+      white-space: pre;
+    }
+  }
+}
+
+.flex-menu {
+  -webkit-order: 1;
+  order: 1;
+  display: block;
+  width: 16%;
+  height: 100%;
+
+  .flex-menu-4 {
+    height: 100%;
+
+    button {
+      display: inline-block;
+      height: 25%;
+      width: 100%;
+      border: none;
+      background-color: #FFF;
+
+      div {
+        display: table;
+        width: 48%;
+        height: 64%;
+        margin: 0 auto;
+
+        span {
+          display: table-cell;
+          vertical-align: middle;
+          text-transform: uppercase;
+          text-shadow: 0 0 .125em #000, 0 0 .25em rgba(0, 0, 0, 0.75);
+          margin: 0 auto;
+          font-size: 176%;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-aspect-ratio: 1/1) {
+  .flex {
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+  .flex-body {
+    -webkit-order: 1;
+    order: 1;
+    width: 100%;
+    height: 80%;
+    border: none;
+  }
+  .flex-menu {
+    -webkit-order: 2;
+    order: 2;
+    width: 100%;
+    height: 20%;
+
+    .flex-menu-4 {
+      button {
+        height: 100%;
+        width: 25%;
+       div {
+         height: 86%;
+         width: 86%;
+       }
+      }
+    }
+  }
+}
