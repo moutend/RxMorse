@@ -1,0 +1,6 @@
+.bundle/
+.sass-cache/
+_site/
+vendor/
+Gemfile.lock
+_local_config.yml

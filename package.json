@@ -1,0 +1,46 @@
+{
+  "name": "RxMorse",
+  "description": "morse signal app",
+  "version": "0.0.0",
+  "author": "moutend <moutend@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/moutend/es6-project-boilerplate/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "rx": "*",
+    "babel": "^5.8.23",
+    "babel-eslint": "^4.1.1",
+    "browserify": "^11.0.1",
+    "eslint": "^1.3.1",
+    "espower-babel": "^3.3.0",
+    "isparta": "^3.0.4",
+    "mocha": "^2.3.0",
+    "power-assert": "^1.0.0",
+    "uglify-js": "^2.4.24"
+  },
+  "files": [
+    "package.json",
+    "README.md",
+    "index.js",
+    "lib"
+  ],
+  "homepage": "https://github.com/moutend/es6-project-boilerplate/",
+  "keywords": [],
+  "licenses": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moutend/es6-project-boilerplate.git"
+  },
+  "scripts": {
+    "build": "npm run build-to5 && npm run build-browser && npm run build-minify",
+    "build-browser": "browserify lib/ --standalone App --outfile playground/js/main.js",
+    "build-minify": "uglifyjs playground/js/main.js -o playground/js/main.min.js",
+    "build-to5": "babel src --out-dir lib",
+    "cover": "babel-node $(npm bin)/isparta cover --report text --report html _mocha",
+    "lint": "eslint src test",
+    "prepublish": "rm -rf lib && npm run lint && npm run test && npm run build-to5",
+    "test": "mocha --compilers js:espower-babel/guess"
+  }
+}
