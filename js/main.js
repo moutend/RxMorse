@@ -5,94 +5,232 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _rx = require("rx");
 
 var _rx2 = _interopRequireDefault(_rx);
 
-var Morse = {
-  fromArrayToStream: function fromArrayToStream(padding) {
-    return function (array) {
-      return _rx2["default"].Observable.fromArray(array.length === 0 ? padding ? [padding] : [] : array);
-    };
-  },
-  fromCommandToCode: function fromCommandToCode(code) {
-    var waitUp = function waitUp(n) {
-      return function (cmd) {
-        return {
-          code: cmd === "UP" ? n > 1 ? "_" : "." : " ",
-          fn: cmd === "UP" ? waitDown : waitUp(n + 1)
+var Morse = (function () {
+  function Morse() {
+    _classCallCheck(this, Morse);
+
+    this.fromCommandToCode = (function () {
+      var waitUp = function waitUp(n) {
+        return function (cmd) {
+          return {
+            code: cmd === "UP" ? n > 1 ? "_" : "." : " ",
+            fn: cmd === "UP" ? waitDown : waitUp(n + 1)
+          };
         };
       };
-    };
-    var waitDown = function waitDown(cmd) {
-      return {
+      var waitDown = function waitDown(cmd) {
+        return {
+          code: " ",
+          fn: cmd === 'DOWN' ? waitUp(0) : waitDown
+        };
+      };
+      var _state = {
         code: " ",
-        fn: cmd === 'DOWN' ? waitUp(0) : waitDown
+        fn: waitDown
       };
-    };
-    var _state = {
-      code: " ",
-      fn: waitDown
-    };
 
-    return function (v) {
-      _state = _state.fn(v);
-      return _state.code;
-    };
-  },
-  filterSpace: function filterSpace() {
-    var limit = arguments.length <= 0 || arguments[0] === undefined ? 4 : arguments[0];
-
-    var c1 = function c1(char) {
-      return {
-        name: "c1",
-        k: char === " " ? false : true,
-        fn: char === "." ? cd(limit / 2) : char === "_" ? cu(limit / 2) : c1
+      return function (v) {
+        _state = _state.fn(v);
+        return _state.code;
       };
-    };
-    var cd = function cd(n) {
-      return function (char) {
-        return {
-          name: "cd",
-          k: n === 0 || char !== " " ? true : false,
-          fn: char === "." ? cd(limit / 2) : char === "_" ? cu(limit / 2) : n > 0 ? cd(n - 1) : c2(limit)
-        };
-      };
-    };
-    var cu = function cu(n) {
-      return function (char) {
-        return {
-          name: "cu",
-          k: n === 0 || char !== " " ? true : false,
-          fn: char === "." ? cd(limit / 2) : char === "_" ? cu(limit / 2) : n > 0 ? cu(n - 1) : c2(limit)
-        };
-      };
-    };
-    var c2 = function c2(n) {
-      return function (char) {
-        return {
-          name: "c2",
-          k: n === 0 || char !== " " ? true : false,
-          fn: char === "." ? cd(limit / 2) : char === "_" ? cu(limit / 2) : n > 0 ? c2(n - 1) : c1
-        };
-      };
-    };
-    var _state = c1(" ");
-
-    return function (v) {
-      _state = _state.fn(v);
-      return _state.k;
-    };
-  },
-  MORSE_TO_CHAR: {
-    "": " ", " ": " ", "_____": "0", ".____": "1", "..___": "2", "...__": "3", "...._": "4", ".....": "5", "_....": "6", "__...": "7", "___..": "8", "____.": "9", "._": "a", "_...": "b", "_._.": "c", "_..": "d", ".": "e", ".._.": "f", "__.": "g", "....": "h", "..": "i", ".___": "j", "_._": "k", "._..": "l", "__": "m", "_.": "n", "___": "o", ".__.": "p", "__._": "q", "._.": "r", "...": "s", "_": "t", ".._": "u", "..._": "v", ".__": "w", "_.._": "x", "_.__": "y", "__..": "z", "._._._": ".", "__..__": ",", "..__..": "?", ".____.": "'", "_.._.": "/g", "_.__.": "(", "_.__._": ")", "._...": "&", "___...": ":", "_._._.": ";", "_..._": "=", "._._.": "+", "_...._": "-", "..__._": "_", "._.._.": "\"", "..._.._": "$", "_._.__": "!", ".__._.": "@"
-  },
-  CHAR_TO_MORSE: {
-    " ": "", "": " ", "a": "._", "b": "_...", "c": "_._.", "d": "_..", "e": ".", "f": ".._.", "g": "__.", "h": "....", "i": "..", "j": ".___", "k": "_._", "l": "._..", "m": "__", "n": "_.", "o": "___", "p": ".__.", "q": "__._", "r": "._.", "s": "...", "t": "_", "u": ".._", "v": "..._", "w": ".__", "x": "_.._", "y": "_.__", "z": "__..", "1": ".____", "2": "..___", "3": "...__", "4": "...._", "5": ".....", "6": "_....", "7": "__...", "8": "___..", "9": "____.", "0": "_____", ".": "._._._", ",": "__..__", "?": "..__..", "'": ".____.", "/": "_.._.", "(": "_.__.", ")": "_.__._", "&": "._...", ":": "___...", ";": "_._._.", "=": "_..._", "+": "._._.", "-": "_...._", "_": "..__._", "\"": "._.._.", "$": "..._.._", "!": "_._.__", "@": ".__._."
+    })();
   }
-};
+
+  _createClass(Morse, [{
+    key: "filterSpace",
+    value: function filterSpace() {
+      var limit = arguments.length <= 0 || arguments[0] === undefined ? 4 : arguments[0];
+
+      var c1 = function c1(char) {
+        return {
+          name: "c1",
+          k: char === " " ? false : true,
+          fn: char === "." ? cd(limit / 2) : char === "_" ? cu(limit / 2) : c1
+        };
+      };
+      var cd = function cd(n) {
+        return function (char) {
+          return {
+            name: "cd",
+            k: n === 0 || char !== " " ? true : false,
+            fn: char === "." ? cd(limit / 2) : char === "_" ? cu(limit / 2) : n > 0 ? cd(n - 1) : c2(limit)
+          };
+        };
+      };
+      var cu = function cu(n) {
+        return function (char) {
+          return {
+            name: "cu",
+            k: n === 0 || char !== " " ? true : false,
+            fn: char === "." ? cd(limit / 2) : char === "_" ? cu(limit / 2) : n > 0 ? cu(n - 1) : c2(limit)
+          };
+        };
+      };
+      var c2 = function c2(n) {
+        return function (char) {
+          return {
+            name: "c2",
+            k: n === 0 || char !== " " ? true : false,
+            fn: char === "." ? cd(limit / 2) : char === "_" ? cu(limit / 2) : n > 0 ? c2(n - 1) : c1
+          };
+        };
+      };
+      var _state = c1(" ");
+
+      return function (v) {
+        _state = _state.fn(v);
+        return _state.k;
+      };
+    }
+  }, {
+    key: "fromArrayToStream",
+    value: function fromArrayToStream(padding) {
+      return function (array) {
+        return _rx2["default"].Observable.fromArray(array.length === 0 ? padding ? [padding] : [] : array);
+      };
+    }
+  }], [{
+    key: "fromCodeToChar",
+    value: function fromCodeToChar(code) {
+      var CODE_TO_CHAR_TABLE = {
+        "": " ",
+        " ": " ",
+        "_____": "0",
+        ".____": "1",
+        "..___": "2",
+        "...__": "3",
+        "...._": "4",
+        ".....": "5",
+        "_....": "6",
+        "__...": "7",
+        "___..": "8",
+        "____.": "9",
+        "._": "a",
+        "_...": "b",
+        "_._.": "c",
+        "_..": "d",
+        ".": "e",
+        ".._.": "f",
+        "__.": "g",
+        "....": "h",
+        "..": "i",
+        ".___": "j",
+        "_._": "k",
+        "._..": "l",
+        "__": "m",
+        "_.": "n",
+        "___": "o",
+        ".__.": "p",
+        "__._": "q",
+        "._.": "r",
+        "...": "s",
+        "_": "t",
+        ".._": "u",
+        "..._": "v",
+        ".__": "w",
+        "_.._": "x",
+        "_.__": "y",
+        "__..": "z",
+        "._._._": ".",
+        "__..__": ",",
+        "..__..": "?",
+        ".____.": "'",
+        "_.._.": "/g",
+        "_.__.": "(",
+        "_.__._": ")",
+        "._...": "&",
+        "___...": ":",
+        "_._._.": ";",
+        "_..._": "=",
+        "._._.": "+",
+        "_...._": "-",
+        "..__._": "_",
+        "._.._.": "\"",
+        "..._.._": "$",
+        "_._.__": "!",
+        ".__._.": "@"
+      };
+
+      return CODE_TO_CHAR_TABLE[code];
+    }
+  }, {
+    key: "fromCharToCode",
+    value: function fromCharToCode(char) {
+      var CHAR_TO_CODE_TABLE = {
+        " ": "",
+        "": " ",
+        "a": "._",
+        "b": "_...",
+        "c": "_._.",
+        "d": "_..",
+        "e": ".",
+        "f": ".._.",
+        "g": "__.",
+        "h": "....",
+        "i": "..",
+        "j": ".___",
+        "k": "_._",
+        "l": "._..",
+        "m": "__",
+        "n": "_.",
+        "o": "___",
+        "p": ".__.",
+        "q": "__._",
+        "r": "._.",
+        "s": "...",
+        "t": "_",
+        "u": ".._",
+        "v": "..._",
+        "w": ".__",
+        "x": "_.._",
+        "y": "_.__",
+        "z": "__..",
+        "1": ".____",
+        "2": "..___",
+        "3": "...__",
+        "4": "...._",
+        "5": ".....",
+        "6": "_....",
+        "7": "__...",
+        "8": "___..",
+        "9": "____.",
+        "0": "_____",
+        ".": "._._._",
+        ",": "__..__",
+        "?": "..__..",
+        "'": ".____.",
+        "/": "_.._.",
+        "(": "_.__.",
+        ")": "_.__._",
+        "&": "._...",
+        ": ": "___...",
+        ";": "_._._.",
+        "=": "_..._",
+        "+": "._._.",
+        "-": "_...._",
+        "_": "..__._",
+        "\"": "._.._.",
+        "$": "..._.._",
+        "!": "_._.__",
+        "@": ".__._."
+      };
+
+      return CHAR_TO_CODE_TABLE[char];
+    }
+  }]);
+
+  return Morse;
+})();
 
 exports["default"] = Morse;
 module.exports = exports["default"];
