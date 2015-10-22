@@ -38,9 +38,8 @@
     "build-browser": "browserify lib/ --standalone App --outfile playground/js/main.js",
     "build-minify": "uglifyjs playground/js/main.js -o playground/js/main.min.js",
     "build-to5": "babel src --out-dir lib",
-    "cover": "babel-node $(npm bin)/isparta cover --report text --report html _mocha",
     "lint": "eslint src test",
-    "prepublish": "rm -rf lib && npm run lint && npm run test && npm run build-to5",
-    "test": "mocha --compilers js:espower-babel/guess"
+    "test": "mocha --compilers js:espower-babel/guess",
+    "deploy": "git subtree push --prefix playground/ origin gh-pages"
   }
 }

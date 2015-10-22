@@ -2,7 +2,7 @@
 
 function init() {
   var Rx            = App.Rx;
-  var Morse         = App.Morse;
+  var morse         = new App.Morse();
   var beep_button   = document.querySelector("#beep");
   var play_button   = document.querySelector("#play");
   var clear_btn     = document.querySelector("#clear");
@@ -98,8 +98,8 @@ function init() {
       .split(mode === "char" ? "" : " ")
       .map(function(value) {
         var output_string = mode === "char"
-          ? Morse.CHAR_TO_MORSE[value.toLowerCase()]
-          : Morse.MORSE_TO_CHAR[value];
+          ? App.Morse.fromCharToCode(value.toLowerCase())
+          : App.Morse.fromCodeToChar(value);
 
         return typeof output_string === "undefined"
           ? "?"
@@ -123,7 +123,7 @@ function init() {
       }
 
       if(value === " ") {
-        char_textarea.value += Morse.MORSE_TO_CHAR[_buffer.join("")] || "?";
+        char_textarea.value += App.Morse.fromCodeToChar(_buffer.join("")) || "?";
         _buffer = [];
       }
       else {
@@ -181,9 +181,9 @@ function init() {
   .filter(whenFocused)
   .map(fromCommandStringToBeep)
   .bufferWithTime(50)
-  .flatMap(Morse.fromArrayToStream("MUTE"))
-  .map(Morse.fromCommandToCode())
-  .filter(Morse.filterSpace(10))
+  .flatMap(morse.fromArrayToStream("MUTE"))
+  .map(morse.fromCommandToCode)
+  .filter(morse.filterSpace(10))
   .subscribe(show)
 
   Rx.Observable.fromEvent(play_button, p_start)

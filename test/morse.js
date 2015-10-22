@@ -9,12 +9,6 @@ const COMMANDS = [
   "UP"
 ];
 
-const CODES = [
-  ".",
-  "_",
-  " "
-];
-
 const COMMAND_TO_CODE = {
   "DOWN DOWN UP":   "  .",
   "DOWN MUTE UP":   "  .",
@@ -24,7 +18,7 @@ const COMMAND_TO_CODE = {
   "DOWN UP":        " .",
   "MUTE DOWN UP":   "  .",
   "UP DOWN UP":   "  ."
-};;
+};
 
 let createPattern = (seed, max_depth) => {
   let result = [];
@@ -49,12 +43,7 @@ let createPattern = (seed, max_depth) => {
 };
 
 let command_array = createPattern(COMMANDS, 2);
-let code_array = [
-  ". ",
-  ".     ",
-  ". . ",
-  ". .     "
-];
+
 const CODE_TO_STR = {
   " ":              "",
   "  ":             "",
@@ -115,19 +104,20 @@ const CODE_TO_STR = {
   ".   _     ":     ". _ ",
   ".   _      ":    ". _ ",
   ".   _       ":   ". _ ",
-  ".   _        ":  ". _  ",
+  ".   _        ":  ". _  "
 };
 
 describe("Morse", () => {
   describe(".fromCommandToCode", () => {
     command_array.map((v) => {
       it("Pattern: " + v, () => {
+        let morse = new Morse();
         let result = "";
         let cmd_array = v.split(/ +/);
         let code = COMMAND_TO_CODE[v] || Util.emptyString(cmd_array.length);
 
         Rx.Observable.fromArray(cmd_array)
-        .map(Morse.fromCommandToCode())
+        .map(morse.fromCommandToCode)
         .subscribe((v) => {
           result += v;
         });
@@ -138,10 +128,12 @@ describe("Morse", () => {
   });
 
   describe(".filterSpace", () => {
-   let a = []
-   for(let key in CODE_TO_STR) {
-     a.push(key);
-   }
+    let morse = new Morse()
+    let a = []
+
+    for(let key in CODE_TO_STR) {
+      a.push(key);
+    }
 
     a.map((v, n) => {
       it("Pattern: " + n + " \"" + v + "\"", () => {
@@ -149,7 +141,7 @@ describe("Morse", () => {
         let cmd_array = v.split("");
 
         Rx.Observable.fromArray(cmd_array)
-        .filter(Morse.filterSpace(4))
+        .filter(morse.filterSpace(4))
         .subscribe((v) => {
           result += v;
         });
